@@ -279,16 +279,13 @@ maxiters=1000
 graph = 'cycle'  # ['barbell',  'bipartite', 'complete', 'cycle', 'grid2D']
 
 # Load existing model parameter values
-with open(f'C:\\Users\\TIMMSLF\OneDrive - The University of Melbourne\\Documents\\PhD\Code\\Data\\vpp_data_N{N_agents}_t24', 'rb') as f:
+with open(f'vpp_data', 'rb') as f:
     data = pickle.load(f)
-
-with open(f'C:\\Users\\TIMMSLF\\OneDrive - The University of Melbourne\\Documents\\PhD\\Code\\Data\\graph_{graph}_N{N_agents}', 'rb') as f:
-    G = pickle.load(f)
 
 diag_index = np.concatenate([np.repeat(jj, 2 * numt) for jj in range(N_agents)]), np.arange(2 * numt * N_agents, dtype=int)
 
 results_dict = {}
-
+G = nx.cycle_graph(N_agents)
 Lap = nx.laplacian_matrix(G).todense()  # Laplacian
 alpha = 0.505 * np.linalg.norm(Lap, ord=2)  # Want (1/2) * lambda_max < alpha <= (2/3) * lambda_max
 W = np.eye(N_agents) - Lap / alpha
@@ -333,4 +330,5 @@ sol_midas, _, results_dict['res_midas'], results_dict['time_midas'] = algorithms
 #     zsol[ii] = sol_midas[ii,2*ii*numt:2*(ii+1)*numt]
 
 # fig_charge, ax_charge = charge_plot(zsol[:,:numt], zsol[:,numt:], data, numt, N_agents, 'midas', [20,14, 18])
+
 # plt.savefig('vpp_aggregate_charge.pdf')
